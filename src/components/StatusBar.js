@@ -18,9 +18,9 @@ const StatusBar = ({ currentRow, gameStatus }) => {
   const message = gameStatus === "You win!" ? `You won in ${currentRow} tries!` : currentRow === maxTries ? "You lost" : `${triesLeft} tries left`;
 
   return (
-    <div className="p-4 m-2 border-b-2 border-gray-200 bg-slate-200 rounded-xl mb-4  max-w-xl mx-auto flex justify-between align-middle items-center">
+    <div className="p-1 m-2 border-b-2 border-gray-200 bg-slate-200 rounded-xl mb-4  max-w-xl mx-auto flex justify-between align-middle items-center">
       <div>
-        <p className="mb-4 text-center">{message}</p>
+        <p className="mb-1 text-center text-zinc-600">{message}</p>
         <ol className="flex items-center space-x-2">
           {[...Array(maxTries)].map((_, index) => (
             <li key={index} className="relative flex-1">

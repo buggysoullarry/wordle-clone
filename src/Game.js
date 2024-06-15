@@ -37,8 +37,8 @@ const Game = () => {
     setCurrentCol(0);
     setCurrentWord("");
     setGameStatus("");
+    setUsedLetters({ correct: [], incorrect: [], notInWord: [] }); // Reset usedLetters
     setSolution(possibleAnswers[Math.floor(Math.random() * possibleAnswers.length)]);
-
     gridRef.current.focus();
   };
 
@@ -139,7 +139,7 @@ const Game = () => {
   return (
     <div className="flex flex-col items-center justify-center bg-indigo-50">
       <StatusBar currentRow={currentRow} gameStatus={gameStatus} />
-      <div className="mt-4">{solution}</div>
+      <div className=" text-xs">{solution}</div>
 
       {gameStatus && (
         <div className="mt-2 text-center">
@@ -152,16 +152,15 @@ const Game = () => {
             <FaPuzzlePiece className="h-5 w-6 mr-1" />
             Play Again
           </button>
-  
         </div>
       )}
-      <div ref={gridRef} className="grid gap-2 focus:outline-none" tabIndex={0} onKeyDown={(e) => handleKeyPress(e.key)} onFocus={(e) => e.target.focus()}>
+      <div ref={gridRef} className="grid gap-1 focus:outline-none" tabIndex={0} onKeyDown={(e) => handleKeyPress(e.key)} onFocus={(e) => e.target.focus()}>
         {grid.map((row, rowIndex) => (
           <div key={rowIndex} className="flex justify-center gap-1">
             {row.map((cell, colIndex) => (
               <div
                 key={colIndex}
-                className={`w-16 h-16 border-black border  ${cell.color} flex items-center justify-center text-2xl font-bold ${
+                className={`w-14 h-14 border-black border  ${cell.color} flex items-center justify-center text-2xl font-bold ${
                   animatingCells.some((c) => c.row === rowIndex && c.col === colIndex) ? "flip" : ""
                 }`}
               >
