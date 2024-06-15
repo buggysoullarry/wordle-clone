@@ -3,22 +3,24 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Neue Helvetica';
-  src: url('./fonts/Helvetica\ Neue\ LT\ W1G\ 75\ Bold.ttf') format('truetype');
-
+  font-family: "Neue Helvetica";
+  src: url("./fonts/Helvetica\ Neue\ LT\ W1G\ 75\ Bold.ttf") format("truetype");
   font-weight: 700; /* Bold weight */
 }
 
-
-
+@font-face {
+  font-family: "OPTIStymie";
+  src: url("./fonts/OPTIStymie-Bold.otf") format("opentype");
+}
 
 body {
   margin: 0;
-  font-family: 'Neue Helvetica', Arial, sans-serif;
-
+  font-family: "Neue Helvetica", Arial, sans-serif;
 }
 
-
+.logofont {
+  font-family: "OPTIStymie", Arial, serif;
+}
 
 .flip {
   animation: flip 500ms ease forwards;

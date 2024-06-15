@@ -1,14 +1,17 @@
-import React from 'react';
-import Game from './Game';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React from "react";
+import Game from "./Game";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FaCog } from "react-icons/fa";
+import { BiBarChartAlt2 } from "react-icons/bi";
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-indigo-50">
+    <div className="min-h-svh flex flex-col items-center justify-center bg-indigo-50">
       <ToastContainer className="mt-4" />
-      <header className="bg-customBlue text-slate-200 w-full p-4 text-center">
-        <h1 className="text-3xl font-extrabold">Mary's Wordle</h1>
+      <header className="bg-white text-zinc-700 w-full px-4 py-1 text-center flex items-center justify-between border-b-2 border-zinc-500   ">
+        <div className="text-lg font-extrabold logofont">Mary's Wordle</div>
+        <div className="flex gap-3 mr-2"><BiBarChartAlt2 className=" w-5 h-5" /><FaCog className=" w-5 h-6" /></div>
       </header>
       <main className=" flex flex-col  grow items-center justify-center">
         <Game />
