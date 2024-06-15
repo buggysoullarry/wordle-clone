@@ -1,4 +1,5 @@
 import React from "react";
+import { RiDeleteBack2Line } from "react-icons/ri";
 
 const keys = [
   ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
@@ -26,7 +27,7 @@ const Keyboard = ({ usedLetters, onKeyClick }) => {
             const textSize = key === "Backspace" ? "md:text-2xl text-xl" : "md:text-base text-sm";
             return (
               <button key={key} className={`h-10 md:h-12 rounded flex items-center ${textSize}  justify-center shadow-sm  ${keyWidth} ${status} focus:outline-none`} onClick={() => onKeyClick(key)}>
-                {key === "Backspace" ? "⌫" : key}
+                {key === "Backspace" ? <RiDeleteBack2Line className="w-full " /> : key}
               </button>
             );
           })}
