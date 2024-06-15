@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-indigo-50">
       <ToastContainer className="mt-4" />
-      <header className="bg-indigo-800 text-slate-400 w-full p-4 text-center">
+      <header className="bg-customBlue text-slate-200 w-full p-4 text-center">
         <h1 className="text-3xl font-extrabold">Mary's Wordle</h1>
       </header>
       <main className=" flex flex-col  grow items-center justify-center">

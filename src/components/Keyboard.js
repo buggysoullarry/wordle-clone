@@ -14,17 +14,17 @@ const Keyboard = ({ usedLetters, onKeyClick }) => {
           {row.map((key) => {
             let status = "";
             if (usedLetters.correct.includes(key)) {
-              status = "bg-green-600 ";
+              status = "bg-customGreen text-white ";
             } else if (usedLetters.incorrect.includes(key)) {
-              status = "bg-indigo-800 ";
+              status = "bg-customBlue text-white ";
             } else if (usedLetters.notInWord.includes(key)) {
-              status = "bg-gray-500 ";
+              status = "bg-zinc-500 text-white ";
             } else {
-              status = "bg-gray-900 ";
+              status = "bg-zinc-300 text-zinc-500";
             }
             const keyWidth = key === "Enter" || key === "Backspace" ? "w-16" : "w-10";
             return (
-              <button key={key} className={`h-10 rounded flex items-center font-medium text-white justify-center ${keyWidth} ${status} focus:outline-none`} onClick={() => onKeyClick(key)}>
+              <button key={key} className={`h-10 rounded flex items-center  text-sm justify-center shadow-sm  ${keyWidth} ${status} focus:outline-none`} onClick={() => onKeyClick(key)}>
                 {key === "Backspace" ? "⌫" : key}
               </button>
             );
