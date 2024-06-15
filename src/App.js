@@ -11,7 +11,7 @@ function App() {
       <ToastContainer className="mt-4" />
       <header className="bg-white text-zinc-700 w-full px-4 py-1 text-center flex items-center justify-between border-b-2 border-zinc-500   ">
         <div className="text-lg font-extrabold logofont">Mary's Wordle</div>
-        <div className="flex gap-3 mr-2"><BiBarChartAlt2 className=" w-5 h-5" /><FaCog className=" w-5 h-6" /></div>
+        <div className="flex gap-3 mr-2"><BiBarChartAlt2 className=" w-5 h-5" /><FaCog className=" w-5 h-5" /></div>
       </header>
       <main className=" flex flex-col  grow items-center justify-center">
         <Game />

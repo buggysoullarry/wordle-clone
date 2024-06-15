@@ -125,6 +125,7 @@ const Game = () => {
           updateStats(currentRow + 1, false); // Update stats with loss status
           setStats(getStats()); // Refresh the stats state
           setIsModalOpen(true); // Open the modal
+          setCurrentRow((prevRow) => prevRow + 1);
         } else {
           setCurrentRow((prevRow) => prevRow + 1);
           setCurrentCol(0);
@@ -138,8 +139,19 @@ const Game = () => {
 
   return (
     <div className="flex flex-col items-center justify-center bg-indigo-50">
+          {gameStatus ? (
+        <div className="flex  md:text-sm text-xs gap-2 pt-1">
+          <a href={`https://www.dictionary.com/browse/${solution}`} target="_blank" rel="noreferrer" >
+            Answer: <span className="underline ml-1"> {solution}</span>
+          </a>
+          <button onClick={() => resetGame()} className="md:text-sm text-xs text-customBlue">
+            play again?
+          </button>
+        </div>
+      ) : null}
       <StatusBar currentRow={currentRow} gameStatus={gameStatus} />
       <div className=" text-xs">{solution}</div>
+    
 
       <div ref={gridRef} className="grid gap-1 focus:outline-none" tabIndex={0} onKeyDown={(e) => handleKeyPress(e.key)} onFocus={(e) => e.target.focus()}>
         {grid.map((row, rowIndex) => (
