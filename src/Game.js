@@ -161,10 +161,7 @@ const Game = ({ setStats, setIsModalOpen, setGameStatus, gameStatus, isHardMode 
       {gameStatus ? (
         <div className="flex md:text-sm text-xs gap-2 pt-1">
           <a href={`https://www.dictionary.com/browse/${solution}`} target="_blank" rel="noreferrer">
-            Answer:{" "}
-            <span className="underline ml-1">
-              {solution} "{isHardMode.toString()}"
-            </span>
+            Answer: <span className="underline ml-1">{solution}</span>
           </a>
           <button onClick={() => resetGame()} className="md:text-sm text-xs text-customBlue">
             play again?
