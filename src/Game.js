@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import StatusBar from "./components/StatusBar";
-import { FaPuzzlePiece } from "react-icons/fa";
-import { notify } from "./notification"; // Import the notify function
+import { notify } from "./notification";
 import Keyboard from "./components/Keyboard";
 import { validWords } from "./validWords";
 import { possibleAnswers } from "./possibleAnswers";
-import { getStats, updateStats, resetStats, getAverageGuesses } from "./utils/stats";
+import { getStats, updateStats } from "./utils/stats";
 
-import EndGameModal from "./components/EndGameModal";
-
-const Game = () => {
+const Game = ({ setStats, setIsModalOpen, setGameStatus, gameStatus, isHardMode }) => {
   const [grid, setGrid] = useState(
     Array(6)
       .fill("")
@@ -18,11 +15,7 @@ const Game = () => {
   const [currentRow, setCurrentRow] = useState(0);
   const [currentCol, setCurrentCol] = useState(0);
   const [currentWord, setCurrentWord] = useState("");
-  const [stats, setStats] = useState(getStats());
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [solution, setSolution] = useState("");
-  const [gameStatus, setGameStatus] = useState("");
   const [usedLetters, setUsedLetters] = useState({ correct: [], incorrect: [], notInWord: [] });
   const [animatingCells, setAnimatingCells] = useState([]); // State to track animating cells
   const gridRef = useRef(null);
@@ -47,13 +40,35 @@ const Game = () => {
   }, []);
 
   useEffect(() => {
-    console.log(solution);
+    gridRef.current.focus();
   }, [solution]);
 
-  useEffect(() => {
-    gridRef.current.focus();
-    console.log(solution);
-  }, [solution]);
+  //validation for hard mode
+  const validateHardMode = (word) => {
+    // Check if the word includes all known correct letters in the correct positions
+    for (let i = 0; i < currentRow; i++) {
+      for (let j = 0; j < 5; j++) {
+        if (grid[i][j].color === "bg-customGreen text-white" && word[j] !== grid[i][j].letter) {
+          notify("Must include the correct letters in the correct positions.");
+
+          return false;
+        }
+        if (grid[i][j].color === "bg-customBlue text-white" && !word.includes(grid[i][j].letter)) {
+          notify("Must include the known letters.");
+
+          return false;
+        }
+      }
+    }
+    // Check if the word includes any known incorrect letters
+    for (let letter of usedLetters.notInWord) {
+      if (word.includes(letter)) {
+        notify("Cannot use letters that are not in the word.");
+        return false;
+      }
+    }
+    return true;
+  };
 
   const handleKeyPress = (key) => {
     if (gameStatus) return;
@@ -67,6 +82,10 @@ const Game = () => {
     } else if (key === "Enter") {
       if (currentCol === 5) {
         if (validWords.includes(currentWord)) {
+          if (isHardMode && !validateHardMode(currentWord)) {
+            return;
+          }
+
           animateRow(currentRow, currentWord);
         } else {
           notify("Invalid word");
@@ -118,7 +137,7 @@ const Game = () => {
           setCurrentRow((prevRow) => prevRow + 1); // Increment the row to reflect the winning attempt
           setGameStatus("You win!");
           updateStats(currentRow + 1, true); // Update the stats with the number of guesses
-          setStats(getStats()); // update the stats state
+          setStats(getStats()); // Update the stats state
           setIsModalOpen(true); // Open the modal
         } else if (currentRow === 5) {
           setGameStatus(`You lost! The word was ${solution}.`);
@@ -139,10 +158,13 @@ const Game = () => {
 
   return (
     <div className="flex flex-col items-center justify-center bg-indigo-50">
-          {gameStatus ? (
-        <div className="flex  md:text-sm text-xs gap-2 pt-1">
-          <a href={`https://www.dictionary.com/browse/${solution}`} target="_blank" rel="noreferrer" >
-            Answer: <span className="underline ml-1"> {solution}</span>
+      {gameStatus ? (
+        <div className="flex md:text-sm text-xs gap-2 pt-1">
+          <a href={`https://www.dictionary.com/browse/${solution}`} target="_blank" rel="noreferrer">
+            Answer:{" "}
+            <span className="underline ml-1">
+              {solution} "{isHardMode.toString()}"
+            </span>
           </a>
           <button onClick={() => resetGame()} className="md:text-sm text-xs text-customBlue">
             play again?
@@ -150,8 +172,7 @@ const Game = () => {
         </div>
       ) : null}
       <StatusBar currentRow={currentRow} gameStatus={gameStatus} />
-      <div className=" text-xs">{solution}</div>
-    
+      {/* <div className="text-xs">{solution}</div> */}
 
       <div ref={gridRef} className="grid gap-1 focus:outline-none" tabIndex={0} onKeyDown={(e) => handleKeyPress(e.key)} onFocus={(e) => e.target.focus()}>
         {grid.map((row, rowIndex) => (
@@ -159,7 +180,7 @@ const Game = () => {
             {row.map((cell, colIndex) => (
               <div
                 key={colIndex}
-                className={`md:size-16 size-8 border-black border  ${cell.color} flex items-center justify-center md:text-2xl text-lg font-bold ${
+                className={`md:size-16 size-8 border-black border ${cell.color} flex items-center justify-center md:text-2xl text-lg font-bold ${
                   animatingCells.some((c) => c.row === rowIndex && c.col === colIndex) ? "flip" : ""
                 }`}
               >
@@ -170,16 +191,6 @@ const Game = () => {
         ))}
       </div>
       <Keyboard usedLetters={usedLetters} onKeyClick={handleKeyPress} />
-      <EndGameModal
-        isOpen={isModalOpen}
-        closeModal={() => setIsModalOpen(false)}
-        gameStatus={gameStatus}
-        stats={stats}
-        resetGame={() => {
-          setIsModalOpen(false);
-          resetGame();
-        }}
-      />
     </div>
   );
 };

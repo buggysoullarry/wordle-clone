@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, Transition } from "@headlessui/react";
-import { FaPuzzlePiece } from "react-icons/fa";
+
 import { VscDebugRestartFrame } from "react-icons/vsc";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
@@ -11,6 +11,18 @@ const EndGameModal = ({ isOpen, closeModal, gameStatus, stats = {}, resetGame })
     acc[guess] = (acc[guess] || 0) + 1;
     return acc;
   }, {});
+
+  const getStreakMessage = (gameStatus, streak, maxStreak) => {
+    if (gameStatus === "You win!") {
+      return `You're on a streak of ${streak}`;
+    } else if (streak > 0) {
+      return `You're on a streak of ${streak}`;
+    } else if (maxStreak > 0) {
+      return `You had a streak of ${maxStreak}`;
+    } else {
+      return `No current streak`;
+    }
+  };
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -38,7 +50,7 @@ const EndGameModal = ({ isOpen, closeModal, gameStatus, stats = {}, resetGame })
                   {gameStatus}
                 </DialogTitle>
                 <div className="mt-2">
-                  <p className="text-sm text-gray-500">{gameStatus === "You win!" ? `You're on a streak of ${streak}` : `You had a streak of ${streak}`}</p>
+                  <p className="text-sm text-gray-500">{getStreakMessage(gameStatus, streak, maxStreak)}</p>
                 </div>
                 <div className="mt-4">
                   <div className="flex justify-between">
@@ -81,7 +93,7 @@ const EndGameModal = ({ isOpen, closeModal, gameStatus, stats = {}, resetGame })
                     onClick={resetGame}
                   >
                     <VscDebugRestartFrame className="h-6 w-6 mr-2 " />
-                    Play Again
+                    {gameStatus ? "Play Again" : "Start New Game"}
                   </button>
                 </div>
               </DialogPanel>
