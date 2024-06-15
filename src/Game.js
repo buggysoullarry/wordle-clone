@@ -147,7 +147,7 @@ const Game = () => {
             {row.map((cell, colIndex) => (
               <div
                 key={colIndex}
-                className={`w-14 h-14 border-black border  ${cell.color} flex items-center justify-center text-2xl font-bold ${
+                className={`lg:size-16 size-8 border-black border  ${cell.color} flex items-center justify-center lg:text-2xl md:text-lg font-bold ${
                   animatingCells.some((c) => c.row === rowIndex && c.col === colIndex) ? "flip" : ""
                 }`}
               >

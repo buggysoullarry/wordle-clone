@@ -22,9 +22,9 @@ const Keyboard = ({ usedLetters, onKeyClick }) => {
             } else {
               status = "bg-zinc-300 text-zinc-500";
             }
-            const keyWidth = key === "Enter" || key === "Backspace" ? "w-12" : "w-8";
+            const keyWidth = key === "Enter" || key === "Backspace" ? "lg:w-14  w-12" : "lg:w-12 w-8";
             return (
-              <button key={key} className={`h-10 rounded flex items-center  text-sm justify-center shadow-sm  ${keyWidth} ${status} focus:outline-none`} onClick={() => onKeyClick(key)}>
+              <button key={key} className={`h-10 rounded flex items-center lg:text-base text-sm justify-center shadow-sm  ${keyWidth} ${status} focus:outline-none`} onClick={() => onKeyClick(key)}>
                 {key === "Backspace" ? "⌫" : key}
               </button>
             );

@@ -77,7 +77,7 @@ const EndGameModal = ({ isOpen, closeModal, gameStatus, stats = {}, resetGame })
                 <div className="mt-4 text-center">
                   <button
                     type="button"
-                    className="text-zinc-600 bg-customYellow hover:bg-[#e9c46a] focus:ring-4 focus:outline-none focus:ring-customYellow font-bold rounded-lg px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-customYellow logofont"
+                    className="text-zinc-700 bg-customYellow hover:bg-[#e9c46a] focus:ring-4 focus:outline-none focus:ring-customYellow font-bold rounded-lg px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-customYellow logofont"
                     onClick={resetGame}
                   >
                     <VscDebugRestartFrame className="h-6 w-6 mr-2 " />

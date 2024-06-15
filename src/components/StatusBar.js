@@ -6,13 +6,13 @@ const StatusBar = ({ currentRow, gameStatus }) => {
   const maxTries = 6;
   const triesLeft = maxTries - currentRow;
   const faceIcons = [
-    <FaFaceSmile className="text-customGreen w-16 h-16" />,
-    <FaFaceMeh className="text-customYellow w-16 h-16" />,
-    <FaFaceSurprise className="text-purple-500 w-16 h-16" />,
-    <FaFaceFrown className="text-orange-500 w-16 h-16" />,
-    <FaFaceSadTear className="text-red-500 w-16 h-16" />,
-    <FaFaceAngry className="text-red-700 w-16 h-16" />,
-    <FaFaceFrownOpen className="text-gray-700 w-16 h-16" />,
+    <FaFaceSmile className="text-customGreen w-14 h-14" />,
+    <FaFaceMeh className="text-customYellow w-14 h-14" />,
+    <FaFaceSurprise className="text-purple-500 w-14 h-14" />,
+    <FaFaceFrown className="text-orange-500 w-14 h-14" />,
+    <FaFaceSadTear className="text-red-500 w-14 h-14" />,
+    <FaFaceAngry className="text-red-700 w-14 h-14" />,
+    <FaFaceFrownOpen className="text-gray-700 w-14 h-14" />,
   ];
 
   const message = gameStatus === "You win!" ? `You won in ${currentRow} tries!` : currentRow === maxTries ? "You lost" : `${triesLeft} tries left`;
