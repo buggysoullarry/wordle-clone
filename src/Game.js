@@ -141,19 +141,6 @@ const Game = () => {
       <StatusBar currentRow={currentRow} gameStatus={gameStatus} />
       <div className=" text-xs">{solution}</div>
 
-      {gameStatus && (
-        <div className="mt-2 text-center">
-          <p className="text-lg font-bold">{gameStatus}</p>
-          <button
-            type="button"
-            className="text-green-800 bg-customYellow hover:bg-customYellow focus:ring-4 focus:outline-none focus:ring-customYellow/50 font-bold rounded-lg  px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-customYellow/50 mb-1 "
-            onClick={resetGame}
-          >
-            <FaPuzzlePiece className="h-5 w-6 mr-1" />
-            Play Again
-          </button>
-        </div>
-      )}
       <div ref={gridRef} className="grid gap-1 focus:outline-none" tabIndex={0} onKeyDown={(e) => handleKeyPress(e.key)} onFocus={(e) => e.target.focus()}>
         {grid.map((row, rowIndex) => (
           <div key={rowIndex} className="flex justify-center gap-1">

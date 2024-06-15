@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, Transition } from "@headlessui/react";
 import { FaPuzzlePiece } from "react-icons/fa";
-import { RiCloseLargeLine } from "react-icons/ri";
+import { VscDebugRestartFrame } from "react-icons/vsc";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
 const EndGameModal = ({ isOpen, closeModal, gameStatus, stats = {}, resetGame }) => {
@@ -32,8 +32,7 @@ const EndGameModal = ({ isOpen, closeModal, gameStatus, stats = {}, resetGame })
             >
               <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                 <button onClick={closeModal} className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none">
-                <AiOutlineCloseCircle className="h-8 w-8" />
-
+                  <AiOutlineCloseCircle className="h-8 w-8" />
                 </button>
                 <DialogTitle as="h3" className="text-lg font-extrabold leading-6 text-gray-900 text-center">
                   {gameStatus}
@@ -78,10 +77,10 @@ const EndGameModal = ({ isOpen, closeModal, gameStatus, stats = {}, resetGame })
                 <div className="mt-4 text-center">
                   <button
                     type="button"
-                    className="text-green-800 bg-customYellow hover:bg-[#e9c46a] focus:ring-4 focus:outline-none focus:ring-customYellow font-bold rounded-lg px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-customYellow"
+                    className="text-zinc-600 bg-customYellow hover:bg-[#e9c46a] focus:ring-4 focus:outline-none focus:ring-customYellow font-bold rounded-lg px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-customYellow logofont"
                     onClick={resetGame}
                   >
-                    <FaPuzzlePiece className="h-5 w-6 mr-1" />
+                    <VscDebugRestartFrame className="h-6 w-6 mr-2 " />
                     Play Again
                   </button>
                 </div>

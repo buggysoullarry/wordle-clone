@@ -16,7 +16,7 @@ function App() {
       <main className=" flex flex-col  grow items-center justify-center">
         <Game />
       </main>
-      <footer className="w-full p-4 text-center bg-gray-800 text-white ">
+      <footer className="w-full p-2 text-center bg-gray-800 text-white text-sm logofont">
         <p>© Larry's Wordle for Mary Harmon </p>
       </footer>
     </div>
