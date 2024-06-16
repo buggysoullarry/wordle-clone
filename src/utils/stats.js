@@ -1,6 +1,6 @@
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
-const STATS_COOKIE = 'wordle_stats';
+const STATS_COOKIE = "wordle_stats";
 
 export const getStats = () => {
   const stats = Cookies.get(STATS_COOKIE);
@@ -36,7 +36,7 @@ export const updateStats = (guesses, won) => {
   } else {
     stats.streak = 0;
   }
-  Cookies.set(STATS_COOKIE, JSON.stringify(stats));
+  Cookies.set(STATS_COOKIE, JSON.stringify(stats), { expires: 365 });
 };
 
 export const resetStats = () => {
@@ -46,13 +46,13 @@ export const resetStats = () => {
 export const getAverageGuesses = () => {
   const stats = getStats();
   const totalGuesses = stats.guesses.reduce((acc, curr) => acc + curr, 0);
-  return (totalGuesses / stats.guesses.length) || 0;
+  return totalGuesses / stats.guesses.length || 0;
 };
 
 export const getGuessDistribution = () => {
   const stats = getStats();
   const distribution = {};
-  stats.guesses.forEach(guess => {
+  stats.guesses.forEach((guess) => {
     if (!distribution[guess]) {
       distribution[guess] = 0;
     }
