@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,6 +20,7 @@ function App() {
     const savedMode = Cookies.get("hardMode");
     return savedMode === "true";
   });
+  const gameRef = useRef(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -33,7 +34,7 @@ function App() {
     // You may need to pass this down to the Game component if it handles game reset logic
     setGameStatus("");
     setStats(getStats());
-    // You can add additional logic here if needed to reset the game state
+    gameRef.current.resetGame();
   };
 
   const toggleHardMode = () => {
@@ -55,7 +56,7 @@ function App() {
         </div>
       </header>
       <main className="flex flex-col grow items-center justify-center">
-        <Game setStats={setStats} setIsModalOpen={setIsModalOpen} setGameStatus={setGameStatus} gameStatus={gameStatus} isHardMode={isHardMode} />
+        <Game ref={gameRef} setStats={setStats} setIsModalOpen={setIsModalOpen} setGameStatus={setGameStatus} gameStatus={gameStatus} isHardMode={isHardMode} />
       </main>
       <footer className="w-full p-2 text-center bg-gray-800 text-white text-sm logofont">
         <p>© Larry's Wordle for Mary Harmon</p>

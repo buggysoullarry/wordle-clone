@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import StatusBar from "./components/StatusBar";
 import { notify } from "./notification";
 import Keyboard from "./components/Keyboard";
@@ -6,7 +6,7 @@ import { validWords } from "./validWords";
 import { possibleAnswers } from "./possibleAnswers";
 import { getStats, updateStats } from "./utils/stats";
 
-const Game = ({ setStats, setIsModalOpen, setGameStatus, gameStatus, isHardMode }) => {
+const Game = forwardRef(({ setStats, setIsModalOpen, setGameStatus, isHardMode, gameStatus }, ref) => {
   const [grid, setGrid] = useState(
     Array(6)
       .fill("")
@@ -19,6 +19,10 @@ const Game = ({ setStats, setIsModalOpen, setGameStatus, gameStatus, isHardMode 
   const [usedLetters, setUsedLetters] = useState({ correct: [], incorrect: [], notInWord: [] });
   const [animatingCells, setAnimatingCells] = useState([]); // State to track animating cells
   const gridRef = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    resetGame,
+  }));
 
   const resetGame = () => {
     setGrid(
@@ -190,6 +194,6 @@ const Game = ({ setStats, setIsModalOpen, setGameStatus, gameStatus, isHardMode 
       <Keyboard usedLetters={usedLetters} onKeyClick={handleKeyPress} />
     </div>
   );
-};
+});
 
 export default Game;

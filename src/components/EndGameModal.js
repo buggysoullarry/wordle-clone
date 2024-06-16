@@ -7,10 +7,13 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 const EndGameModal = ({ isOpen, closeModal, gameStatus, stats = {}, resetGame }) => {
   const { played = 0, wins = 0, streak = 0, maxStreak = 0, guesses = [] } = stats;
   const winPercentage = played > 0 ? ((wins / played) * 100).toFixed(0) : 0;
-  const guessDistribution = guesses.reduce((acc, guess) => {
-    acc[guess] = (acc[guess] || 0) + 1;
-    return acc;
-  }, {});
+
+  
+  const guessDistribution = Array.from({ length: 6 }, (_, i) => ({
+    guess: i + 1,
+    count: guesses.filter(g => g === i + 1).length
+  }));
+
 
   const getStreakMessage = (gameStatus, streak, maxStreak) => {
     if (gameStatus === "You win!") {
@@ -74,13 +77,13 @@ const EndGameModal = ({ isOpen, closeModal, gameStatus, stats = {}, resetGame })
                   <div className="mt-6">
                     <h4 className="text-lg font-medium leading-6 text-gray-900">Guess Distribution</h4>
                     <div className="mt-2">
-                      {Object.keys(guessDistribution).map((guess, index) => (
+                    {guessDistribution.map(({ guess, count }, index) => (
                         <div key={index} className="flex items-center">
                           <div className="w-4 text-gray-500">{guess}</div>
                           <div className="flex-1 bg-gray-200 h-4 mx-2">
-                            <div className={`bg-customGreen h-full`} style={{ width: `${(guessDistribution[guess] / played) * 100}%` }}></div>
+                            <div className={`bg-customGreen h-full`} style={{ width: `${played > 0 ? (count / played) * 100 : 0}%` }}></div>
                           </div>
-                          <div className="w-4 text-gray-500">{guessDistribution[guess]}</div>
+                          <div className="w-4 text-gray-500">{count}</div>
                         </div>
                       ))}
                     </div>
