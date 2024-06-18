@@ -26,7 +26,6 @@ const lettersReducer = (state, action) => {
   }
 };
 
-// Function to create an empty grid
 const createEmptyGrid = () =>
   Array(6)
     .fill("")
@@ -40,36 +39,39 @@ const Game = forwardRef(({ setStats, setIsModalOpen, setGameStatus, isHardMode, 
   const [currentWord, setCurrentWord] = useState("");
   const [solution, setSolution] = useState("");
 
-  const [animatingCells, setAnimatingCells] = useState([]); // State to track animating cells
+  const [animatingCells, setAnimatingCells] = useState([]);
   const gridRef = useRef(null);
+  const initializedRef = useRef(false);
 
   useImperativeHandle(ref, () => ({
     resetGame,
   }));
 
   const resetGame = useCallback(() => {
-    setGrid(createEmptyGrid);
+    setGrid(createEmptyGrid());
     setCurrentRow(0);
     setCurrentCol(0);
     setCurrentWord("");
     setGameStatus("");
-    dispatch({ type: "RESET" }); // Reset usedLetters
+    dispatch({ type: "RESET" });
     setSolution(possibleAnswers[Math.floor(Math.random() * possibleAnswers.length)]);
     gridRef.current.focus();
-  }, [dispatch, gridRef, setGameStatus]); //Add dependencies if any variables used inside resetGame change over time
+  }, [dispatch, gridRef, setGameStatus]);
 
   useEffect(() => {
+    if (initializedRef.current) return;
+
     const setNewSolution = () => {
       setSolution(possibleAnswers[Math.floor(Math.random() * possibleAnswers.length)]);
     };
 
     const restoreGameState = (state) => {
-      setSolution(state.solution);
       setGrid(state.grid);
       setCurrentRow(state.currentRow);
       setCurrentCol(state.currentCol);
       setCurrentWord(state.currentWord);
       setGameStatus(state.gameStatus);
+      setSolution(state.solution);
       dispatch({ type: "RESTORE_STATE", payload: state.usedLetters });
     };
 
@@ -77,10 +79,13 @@ const Game = forwardRef(({ setStats, setIsModalOpen, setGameStatus, isHardMode, 
 
     if (savedState) {
       const state = JSON.parse(savedState);
+
       state.solution === "" ? setNewSolution() : restoreGameState(state);
     } else {
       setNewSolution();
     }
+
+    initializedRef.current = true;
   }, [setGameStatus]);
 
   useEffect(() => {
@@ -89,24 +94,37 @@ const Game = forwardRef(({ setStats, setIsModalOpen, setGameStatus, isHardMode, 
     }
   }, [solution, grid, currentRow, currentCol, currentWord, usedLetters, animatingCells]);
 
-  //validation for hard mode
+  useEffect(() => {
+    const saveGameState = () => {
+      const state = {
+        grid,
+        currentRow,
+        currentCol,
+        currentWord,
+        gameStatus,
+        usedLetters,
+        solution,
+      };
+
+      Cookies.set("gameState", JSON.stringify(state), { expires: 365 });
+    };
+
+    saveGameState();
+  }, [ currentRow, usedLetters, gameStatus, solution]);
+
   const validateHardMode = (word) => {
-    // Check if the word includes all known correct letters in the correct positions
     for (let i = 0; i < currentRow; i++) {
       for (let j = 0; j < 5; j++) {
         if (grid[i][j].color === "bg-customGreen text-white" && word[j] !== grid[i][j].letter) {
           notify("Must include the correct letters in the correct positions.");
-
           return false;
         }
         if (grid[i][j].color === "bg-customBlue text-white" && !word.includes(grid[i][j].letter)) {
           notify("Must include the known letters.");
-
           return false;
         }
       }
     }
-    // Check if the word includes any known incorrect letters
     for (let letter of usedLetters.notInWord) {
       if (word.includes(letter)) {
         notify("Cannot use letters that are not in the word.");
@@ -150,7 +168,6 @@ const Game = forwardRef(({ setStats, setIsModalOpen, setGameStatus, isHardMode, 
 
   const animateRow = (rowIndex, word) => {
     const updatedGrid = [...grid];
-    // const newUsedLetters = { ...usedLetters };
     let isCorrect = true;
 
     const animateCell = (colIndex) => {
@@ -163,43 +180,49 @@ const Game = forwardRef(({ setStats, setIsModalOpen, setGameStatus, isHardMode, 
             dispatch({ type: "addCorrect", payload: letter });
           } else if (solution.includes(letter)) {
             updatedGrid[rowIndex][colIndex].color = "bg-customBlue text-white";
-
             dispatch({ type: "addIncorrect", payload: letter });
             isCorrect = false;
           } else {
             updatedGrid[rowIndex][colIndex].color = "bg-zinc-500 text-white";
-
             dispatch({ type: "addNotInWord", payload: letter });
             isCorrect = false;
           }
           setAnimatingCells((prev) => prev.filter((cell) => !(cell.row === rowIndex && cell.col === colIndex)));
           setGrid(updatedGrid);
-        }, 300); // Delay for the color change to align with the flip animation
+        }, 300);
 
         setTimeout(() => {
           animateCell(colIndex + 1);
-        }, 400); // Delay for the next cell animation
+        }, 400);
       } else {
-        // setUsedLetters(newUsedLetters);
         if (isCorrect) {
-          setCurrentRow((prevRow) => prevRow + 1); // Increment the row to reflect the winning attempt
-          setGameStatus("You win!");
-          updateStats(currentRow + 1, true); // Update the stats with the number of guesses
-          setStats(getStats()); // Update the stats state
-          setIsModalOpen(true); // Open the modal
-          saveGameState(currentRow + 1, "You win!");
+          setCurrentRow((prevRow) => {
+            const newRow = prevRow + 1;
+            setGameStatus("You win!");
+            updateStats(newRow, true);
+            setStats(getStats());
+            setIsModalOpen(true);
+            saveGameState(newRow, "You win!");
+            return newRow;
+          });
         } else if (currentRow === 5) {
-          setGameStatus(`You lost! The word was ${solution}.`);
-          updateStats(currentRow + 1, false); // Update stats with loss status
-          setStats(getStats()); // Refresh the stats state
-          setIsModalOpen(true); // Open the modal
-          setCurrentRow((prevRow) => prevRow + 1);
-          saveGameState(currentRow + 1, `You lost The word was ${solution}.`);
+          setCurrentRow((prevRow) => {
+            const newRow = prevRow + 1;
+            setGameStatus(`You lost! The word was ${solution}.`);
+            updateStats(newRow, false);
+            setStats(getStats());
+            setIsModalOpen(true);
+            saveGameState(newRow, `You lost! The word was ${solution}.`);
+            return newRow;
+          });
         } else {
-          setCurrentRow((prevRow) => prevRow + 1);
-          setCurrentCol(0);
-          setCurrentWord("");
-          saveGameState(currentRow + 1, "");
+          setCurrentRow((prevRow) => {
+            const newRow = prevRow + 1;
+            setCurrentCol(0);
+            setCurrentWord("");
+            saveGameState(newRow, "");
+            return newRow;
+          });
         }
       }
     };
@@ -211,13 +234,14 @@ const Game = forwardRef(({ setStats, setIsModalOpen, setGameStatus, isHardMode, 
   const saveGameState = (row, game_Status) => {
     const state = {
       grid,
-      currentRow: row, // Save the current row for the next game
-      currentCol: 0, // Reset current column to 0 when saving state
+      currentRow: row,
+      currentCol: 0,
       currentWord: "",
       gameStatus: game_Status,
       usedLetters,
       solution,
     };
+
     Cookies.set("gameState", JSON.stringify(state), { expires: 365 });
   };
 
@@ -238,8 +262,6 @@ const Game = forwardRef(({ setStats, setIsModalOpen, setGameStatus, isHardMode, 
         </div>
       ) : null}
       <StatusBar currentRow={currentRow} gameStatus={gameStatus} />
-      {/* <div className="text-xs">{solution}</div> */}
-
       <div ref={gridRef} className="grid gap-1 focus:outline-none" tabIndex={0} onKeyDown={(e) => handleKeyPress(e.key)} onFocus={(e) => e.target.focus()}>
         {grid.map((row, rowIndex) => (
           <div key={rowIndex} className="flex justify-center gap-1">
